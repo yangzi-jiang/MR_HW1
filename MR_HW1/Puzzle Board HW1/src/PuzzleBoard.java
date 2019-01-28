@@ -1,6 +1,6 @@
 import java.util.Random;
 
-public class PuzzleBoard {
+public class PuzzleBoard implements Comparable<PuzzleBoard> {
 	int[][] table;
 	int zeroRow;
 	int zeroCol;
@@ -23,7 +23,7 @@ public class PuzzleBoard {
 		table[zeroRow][zeroCol] = 0;
 
 	}
-
+//edit to fill in from scratch
 	public PuzzleBoard(PuzzleBoard x) {
 		this.table = x.table;
 		this.legalz = x.legalz;
@@ -31,6 +31,7 @@ public class PuzzleBoard {
 		this.zeroCol = x.zeroCol;
 	}
 	
+//create a error puzzle
 	public PuzzleBoard(int zero) {
 		this.table = new int[3][3];
 		this.legalz = new int[4];
@@ -74,7 +75,7 @@ public class PuzzleBoard {
 		x.zeroCol--;
 	}
 
-
+//redo to avoid static
 	public static void isLegal(PuzzleBoard x) {
 
 		//zero out all the legalz array
@@ -134,7 +135,7 @@ public class PuzzleBoard {
 	//f(n) = h(n)..heuristic..... + g(n)....path cost...
 
 	private static void randomize(PuzzleBoard x) {
-		isLegal(x);
+		isLegal(x); //return a one-time list vs. an atribute then pick based on the length of the list
 		int check = 0;
 		int randomMove;
 		int temp = 0;
@@ -188,6 +189,17 @@ public class PuzzleBoard {
 	}
 
 
+	@Override
+	public int compareTo(PuzzleBoard o) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	//Equals method (tiles are the same or not) boolean. 
+	
+	//hashCode method
+	
+	
 
 	public static void main(String[] args) {
 
@@ -203,5 +215,6 @@ public class PuzzleBoard {
 
 
 	}
+	
 
 }

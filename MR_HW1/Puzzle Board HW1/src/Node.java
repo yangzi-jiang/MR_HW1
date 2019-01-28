@@ -4,7 +4,7 @@ public class Node implements Comparable<Node>{
 
 	public PuzzleBoard puzzle;
 	int heuristicVal;
-	int edgeCost;
+	int edgeCost; //path cost
 	int functionCost;
 	boolean isVisited;
 

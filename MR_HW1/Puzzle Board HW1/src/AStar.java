@@ -1,8 +1,11 @@
-import java.util.Map;
 import java.util.PriorityQueue;
 
+//not using static methods
 public class AStar extends PuzzleBoard {
 
+	
+	//make these heuristics a part of the puzzleBoard.
+	
 	//Heuristic to calculate the Manhattan distance 
 	public static int heuristic1(PuzzleBoard x) {
 		int h = 0;
@@ -108,7 +111,7 @@ public class AStar extends PuzzleBoard {
 	//			if node contains goal state, return solution
 	//			for each successor s of node:
 	//				add s to frontier
-	public static PuzzleBoard aStar(PuzzleBoard x) {
+	public static int solve(PuzzleBoard x) {
 		
 		PriorityQueue<Node> frontier = new PriorityQueue<Node>();
 		
@@ -120,7 +123,7 @@ public class AStar extends PuzzleBoard {
 			Node next = frontier.poll();
 			
 			printTable(next.puzzle);
-			
+			//counter++ somewhere
 			if(isGoal(next.puzzle)) {
 				return next.puzzle;
 			}
@@ -129,14 +132,16 @@ public class AStar extends PuzzleBoard {
 		
 		PuzzleBoard error = new PuzzleBoard(0);
 		System.out.println("Error");
-		return error;
+		return -1; // throw an exception
 
 	}
 
 
 
 	public static void main(String[] args) {
-
+		
+		// Create boards and solve them using A*
+		
 		PuzzleBoard a = new PuzzleBoard();
 
 		printTable(a);
