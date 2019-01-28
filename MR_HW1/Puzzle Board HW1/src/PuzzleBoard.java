@@ -11,15 +11,20 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 	private int zeroRow;
 	private int zeroCol;
 
-	//get rid of this in a bit
-	int[] legalz;
+	int pathCost;
+	int functionCost;
+
 
 	//new, ordered Puzzle Board constructor
 	public PuzzleBoard() {
 		this.table = new int[3][3];
-		this.legalz = new int[4];
 		this.zeroRow = 2;
 		this.zeroCol = 2;
+		
+		pathCost = 0;
+		
+		//can we call the heuristic like this? 
+		this.functionCost = pathCost + this.heuristicManhattan();
 
 		int counter = 1;
 		for(int i=0; i<3; i++) {
@@ -35,9 +40,11 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 	//new PuzzleBoard based on a template of a board
 	public PuzzleBoard(PuzzleBoard template) {
 		this.table = new int[3][3];
-		this.legalz = new int[4];
 		this.zeroRow = 2;
 		this.zeroCol = 2;
+		
+		this.pathCost = template.pathCost;
+		this.functionCost = template.functionCost;
 
 		int counter = 1;
 		for(int i=0; i<3; i++) {
@@ -188,6 +195,69 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 			this.randomize();
 		}
 	}
+
+
+	//helper for heuristicManhattan
+	private int mDistance(int row, int col) {
+		int element = this.table[row][col];
+
+		// Calculate element's goal row & col
+		int temp = element - 1;
+		int goalRow = temp / 3;
+		int goalCol = temp % 3;
+
+		int mDistance = Math.abs(goalRow - row) + Math.abs(goalCol - col);	
+
+		//			System.out.println("mDistance is " + mDistance);
+		return mDistance;
+	}
+
+
+	//Heuristic to calculate the Manhattan distance 
+	public  int heuristicManhattan() {
+		int h = 0;
+		for(int i = 0; i < 3; i++) {
+			for(int j = 0; j < 3; j++) {
+				if(this.table[i][j] != 0) {
+					h += this.mDistance(i, j);
+				}
+			}
+		}
+
+		return h;
+	}
+
+	//helper for heuristicMisplaced
+	private int misplaced(int row, int col) {
+		int element = this.table[row][col];
+
+
+		// Calculate element's goal row & col
+
+		int temp = element-1;
+		if(row == temp/3 && col == temp%3) {
+			return 0;
+		}
+		else {
+			return 1;
+		}
+	}
+
+	//Heuristic to calculate the amount of tiles misplaced
+	public int heuristicMisplaced() {
+		int h = 0;
+		for(int i = 0; i < 3; i++) {
+			for(int j = 0; j < 3; j++) {
+				if(this.table[i][j] != 0) {
+					h += this.misplaced(i, j);
+				}
+			}
+		}
+		//			System.out.println("Heuristic 2 is " + h);
+		return h;
+	}
+
+
 
 
 
