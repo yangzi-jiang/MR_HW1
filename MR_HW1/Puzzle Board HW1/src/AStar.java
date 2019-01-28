@@ -77,21 +77,21 @@ public class AStar extends PuzzleBoard {
 		
 		if(x.legalz[1] == 1) {
 			PuzzleBoard rightBoard = new PuzzleBoard(x);
-			moveUp(rightBoard);
+			moveRight(rightBoard);
 			Node right = new Node(rightBoard, heuristic1(rightBoard), 1);
 			frontier.add(right);
 		}
 		
 		if(x.legalz[2] == 1) {
 			PuzzleBoard downBoard = new PuzzleBoard(x);
-			moveUp(downBoard);
+			moveDown(downBoard);
 			Node down = new Node(downBoard, heuristic1(downBoard), 1);
 			frontier.add(down);
 		}
 		
 		if(x.legalz[3] == 1) {
 			PuzzleBoard leftBoard = new PuzzleBoard(x);
-			moveUp(leftBoard);
+			moveLeft(leftBoard);
 			Node left = new Node(leftBoard, heuristic1(leftBoard), 1);
 			frontier.add(left);
 		}
@@ -128,6 +128,7 @@ public class AStar extends PuzzleBoard {
 		}
 		
 		PuzzleBoard error = new PuzzleBoard(0);
+		System.out.println("Error");
 		return error;
 
 	}

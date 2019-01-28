@@ -5,13 +5,15 @@ public class Node implements Comparable<Node>{
 	public PuzzleBoard puzzle;
 	int heuristicVal;
 	int edgeCost;
-	int functionCost = edgeCost + heuristicVal;
+	int functionCost;
 	boolean isVisited;
 
 	public Node(PuzzleBoard x, int heuristic, int edge) {
-		this.puzzle = x;
-		this.heuristicVal = heuristic;
-		this.edgeCost = edge;
+		puzzle = x;
+		heuristicVal = heuristic;
+		edgeCost = edge;
+		isVisited = false;
+		functionCost = edgeCost + heuristicVal;
 	}
 
 //	public static boolean nodeComp(Node a, Node b) {
@@ -26,11 +28,11 @@ public class Node implements Comparable<Node>{
 
 	@Override
 	public int compareTo(Node a) {
-		if (a.heuristicVal+a.edgeCost < this.functionCost) {
+		if (this.functionCost < a.functionCost) {
 			return 1;
 		}
 		
-		if (a.heuristicVal+a.edgeCost >= this.functionCost) {
+		if (this.functionCost == a.functionCost) {
 			return 0;
 		}
 		
