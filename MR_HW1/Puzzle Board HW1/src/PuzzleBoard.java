@@ -1,12 +1,10 @@
 import java.util.Random;
 
 public class PuzzleBoard {
-//hello
 	int[][] table;
 	int zeroRow;
 	int zeroCol;
-	static int[] legalz;
-
+	int[] legalz;
 	
 	//Puzzle Board constructor
 	public PuzzleBoard() {
@@ -26,6 +24,21 @@ public class PuzzleBoard {
 
 	}
 
+	public PuzzleBoard(PuzzleBoard x) {
+		table = x.table;
+		legalz = x.legalz;
+		zeroRow = x.zeroRow;
+		zeroCol = x.zeroCol;
+	}
+	
+	public PuzzleBoard(int zero) {
+		table = new int[3][3];
+		legalz = new int[4];
+		zeroRow = 2;
+		zeroCol = 2;
+	}
+	
+	
 	// Prints out the table
 	public static void printTable(PuzzleBoard x) {
 		for(int i=0; i<3; i++) {
@@ -37,32 +50,32 @@ public class PuzzleBoard {
 		}
 	}
 
-	private static void moveUp(PuzzleBoard x) {
+	public static void moveUp(PuzzleBoard x) {
 		x.table[x.zeroRow][x.zeroCol]= x.table[x.zeroRow - 1][x.zeroCol];
 		x.table[x.zeroRow - 1][x.zeroCol] = 0;
 		x.zeroRow--;
 	}
 
-	private static void moveRight(PuzzleBoard x) {
+	public static void moveRight(PuzzleBoard x) {
 		x.table[x.zeroRow][x.zeroCol]= x.table[x.zeroRow][x.zeroCol + 1];
 		x.table[x.zeroRow][x.zeroCol + 1] = 0;
 		x.zeroCol++;
 	}
 
-	private static void moveDown(PuzzleBoard x) {
+	public static void moveDown(PuzzleBoard x) {
 		x.table[x.zeroRow][x.zeroCol]= x.table[x.zeroRow + 1][x.zeroCol];
 		x.table[x.zeroRow + 1][x.zeroCol] = 0;
 		x.zeroRow++;
 	}
 
-	private static void moveLeft(PuzzleBoard x) {
+	public static void moveLeft(PuzzleBoard x) {
 		x.table[x.zeroRow][x.zeroCol ]= x.table[x.zeroRow][x.zeroCol - 1];
 		x.table[x.zeroRow][x.zeroCol - 1] = 0;
 		x.zeroCol--;
 	}
 
 
-	private static void isLegal(PuzzleBoard x) {
+	public static void isLegal(PuzzleBoard x) {
 
 		//zero out all the legalz array
 		for(int i=0; i<4; i++) {
@@ -130,12 +143,12 @@ public class PuzzleBoard {
 		for(int i = 0; i<4; i++) {
 			check += x.legalz[i];
 		}
-		System.out.println("Check is " + check);
+//		System.out.println("Check is " + check);
 
 
 		Random rand = new Random();
 		randomMove = rand.nextInt((check - 1) + 1) + 1;
-		System.out.println("Random is " + randomMove);
+//		System.out.println("Random is " + randomMove);
 
 
 		for(int i = 0; i<4; i++) {
@@ -145,22 +158,22 @@ public class PuzzleBoard {
 			if(temp == randomMove) {
 				if(i == 0) {
 					moveUp(x);
-					printTable(x);
+//					printTable(x);
 
 				}
 				else if(i == 1) {
 					moveRight(x);
-					printTable(x);
+//					printTable(x);
 
 				}
 				else if(i == 2) {
 					moveDown(x);
-					printTable(x);
+//					printTable(x);
 
 				}
 				else {
 					moveLeft(x);
-					printTable(x);
+//					printTable(x);
 				}
 				break;
 			}
@@ -178,16 +191,16 @@ public class PuzzleBoard {
 
 	public static void main(String[] args) {
 
-		PuzzleBoard a = new PuzzleBoard();
-
-		printTable(a);
-
-		System.out.println(isGoal(a));
-
-		randomizeBoard(a, 10);
-		
-		
-		printTable(a);
+//		PuzzleBoard a = new PuzzleBoard();
+//
+//		printTable(a);
+//
+//		System.out.println(isGoal(a));
+//
+//		randomizeBoard(a, 10);
+//		
+//		
+//		printTable(a);
 
 
 	}
