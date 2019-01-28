@@ -1,40 +1,39 @@
+//import java.util.Comparator;
 
-public class Node extends PuzzleBoard{
+public class Node implements Comparable<Node>{
 
 	public PuzzleBoard puzzle;
 	int heuristicVal;
 	int edgeCost;
+	int functionCost = edgeCost + heuristicVal;
+	boolean isVisited;
 
 	public Node(PuzzleBoard x, int heuristic, int edge) {
-		puzzle = x;
-		heuristicVal = heuristic;
-		edgeCost = edge;
+		this.puzzle = x;
+		this.heuristicVal = heuristic;
+		this.edgeCost = edge;
 	}
 
-	public static boolean nodeComp(Node a, Node b) {
-		return a.heuristicVal+a.edgeCost < b.heuristicVal+b.edgeCost;
-	}
+//	public static boolean nodeComp(Node a, Node b) {
+//		return a.heuristicVal+a.edgeCost < b.heuristicVal+b.edgeCost;
+//	}
 	
 	public static int[] child(PuzzleBoard x) {
-		isLegal(x);
+		PuzzleBoard.isLegal(x);
 		return x.legalz;
 	}
 
-//	public static boolean nodeComp(Node a, Node b, Node c) {
-//		return a.heuristicVal+a.edgeCost < b.heuristicVal+b.edgeCost;
-//	}
-//
-//	public static Node findMin(Node a, Node b, Node c, Node d) {
-//		Math.min(Math.min(Math.min(a.heuristicVal+a.edgeCost, b.heuristicVal+b.edgeCost), 
-//				c.heuristicVal+c.edgeCost),d.heuristicVal+d.edgeCost);
-//		
-//		return a;
-//	}
 
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+	@Override
+	public int compareTo(Node a) {
+		if (a.heuristicVal+a.edgeCost < this.functionCost) {
+			return 1;
+		}
+		
+		if (a.heuristicVal+a.edgeCost >= this.functionCost) {
+			return 0;
+		}
+		
+		return -1;
 	}
-
 }

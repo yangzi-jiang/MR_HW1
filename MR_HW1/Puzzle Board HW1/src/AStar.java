@@ -44,7 +44,7 @@ public class AStar extends PuzzleBoard {
 				}
 			}
 		}
-//		System.out.println("hueristic 2 is " + h);
+//		System.out.println("Heuristic 2 is " + h);
 		return h;
 	}
 

@@ -8,10 +8,10 @@ public class PuzzleBoard {
 	
 	//Puzzle Board constructor
 	public PuzzleBoard() {
-		table = new int[3][3];
-		legalz = new int[4];
-		zeroRow = 2;
-		zeroCol = 2;
+		this.table = new int[3][3];
+		this.legalz = new int[4];
+		this.zeroRow = 2;
+		this.zeroCol = 2;
 
 		int counter = 1;
 		for(int i=0; i<3; i++) {
@@ -25,17 +25,17 @@ public class PuzzleBoard {
 	}
 
 	public PuzzleBoard(PuzzleBoard x) {
-		table = x.table;
-		legalz = x.legalz;
-		zeroRow = x.zeroRow;
-		zeroCol = x.zeroCol;
+		this.table = x.table;
+		this.legalz = x.legalz;
+		this.zeroRow = x.zeroRow;
+		this.zeroCol = x.zeroCol;
 	}
 	
 	public PuzzleBoard(int zero) {
-		table = new int[3][3];
-		legalz = new int[4];
-		zeroRow = 2;
-		zeroCol = 2;
+		this.table = new int[3][3];
+		this.legalz = new int[4];
+		this.zeroRow = 2;
+		this.zeroCol = 2;
 	}
 	
 	
@@ -191,16 +191,15 @@ public class PuzzleBoard {
 
 	public static void main(String[] args) {
 
-//		PuzzleBoard a = new PuzzleBoard();
-//
-//		printTable(a);
-//
-//		System.out.println(isGoal(a));
-//
-//		randomizeBoard(a, 10);
-//		
-//		
-//		printTable(a);
+		PuzzleBoard a = new PuzzleBoard();
+
+		printTable(a);
+
+		System.out.println(isGoal(a));
+
+		randomizeBoard(a, 10);
+		
+		printTable(a);
 
 
 	}
