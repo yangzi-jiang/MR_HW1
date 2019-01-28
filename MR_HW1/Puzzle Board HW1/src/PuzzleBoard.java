@@ -1,10 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
 import java.util.*;
-
 
 public class PuzzleBoard implements Comparable<PuzzleBoard> {
 	private int[][] table;
@@ -20,9 +14,9 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		this.table = new int[3][3];
 		this.zeroRow = 2;
 		this.zeroCol = 2;
-		
+
 		pathCost = 0;
-		
+
 		//can we call the heuristic like this? 
 		this.functionCost = pathCost + this.heuristicManhattan();
 
@@ -42,7 +36,7 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		this.table = new int[3][3];
 		this.zeroRow = 2;
 		this.zeroCol = 2;
-		
+
 		this.pathCost = template.pathCost;
 		this.functionCost = template.functionCost;
 
@@ -148,58 +142,8 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		}
 		return true;
 	}
-	
-	@Override
-	public int compareTo(PuzzleBoard current) {
-		if (this.functionCost < current.functionCost) {
-			return 1;
-		}
-		
-		if (this.functionCost == current.functionCost) {
-			return 0;
-		}
-		
-		return -1;
-	}
-
-	//@Override
-	public boolean equalTo(PuzzleBoard next) {
-		
-		//PuzzleBoard nextNode = (PuzzleBoard) next;
-		for(int i=0; i<3; i++) {
-			for(int j=0; j<3; j++) {
-				if(this.table[i][j] != next.table[i][j]) {
-					return false;
-				}
-			}
-		}
-		
-		return true;
-	}
-	
-	@Override
-	private int HashCode(PuzzleBoard current) {
-		
-		final int prime = 131;
-		
-//		Hashtable visited = new Hashtable(100);
-		
-		int boardValue = 0;
-		
-		for(int i=0; i<3; i++) {
-			for(int j=0; j<3; j++) {
-				boardValue += current.table[i][j] * i + j;
-			}
-		}
-		
-		return boardValue * prime;
-	}
 
 
-	//code from the slides. 
-	//priority queue
-	//f(n) = h(n)..heuristic..... + g(n)....path cost...
-	//return a one-time list vs. an atribute then pick based on the length of the list
 
 	private void randomize() {
 		List<Integer> legalMoves = this.isLegal(); 
@@ -302,26 +246,70 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 
 
 
+	//Why doesn't need Override????
 
-
-	//Equals method (tiles are the same or not) boolean. 
-
+	@Override
 	//hashCode method
+	public int compareTo(PuzzleBoard current) {
+		if (this.functionCost < current.functionCost) {
+			return 1;
+		}
+
+		if (this.functionCost == current.functionCost) {
+			return 0;
+		}
+
+		return -1;
+	}
+
+	//@Override
+	//Equals method (tiles are the same or not) boolean. 
+	public boolean equalTo(PuzzleBoard next) {
+
+		//PuzzleBoard nextNode = (PuzzleBoard) next;
+		for(int i=0; i<3; i++) {
+			for(int j=0; j<3; j++) {
+				if(this.table[i][j] != next.table[i][j]) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	//@Override
+	private int HashCode(PuzzleBoard current) {
+
+		final int prime = 131;
+
+		//		Hashtable visited = new Hashtable(100);
+
+		int boardValue = 0;
+
+		for(int i=0; i<3; i++) {
+			for(int j=0; j<3; j++) {
+				boardValue += current.table[i][j] * i + j;
+			}
+		}
+
+		return boardValue * prime;
+	}
+
 
 
 
 	public static void main(String[] args) {
 
-		PuzzleBoard a = new PuzzleBoard();
-
-		a.printTable();
-
-		//		System.out.println(a.isGoal());
-
-		a.randomizeBoard(3);
-
-		a.printTable();
-
+		//		PuzzleBoard a = new PuzzleBoard();
+		//
+		//		a.printTable();
+		//
+		//		//		System.out.println(a.isGoal());
+		//
+		//		a.randomizeBoard(3);
+		//
+		//		a.printTable();
 
 	}
 
