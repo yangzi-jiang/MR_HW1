@@ -1,12 +1,20 @@
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
+import java.util.Set;
+import java.util.*;
+
 
 public class PuzzleBoard implements Comparable<PuzzleBoard> {
-	int[][] table;
-	int zeroRow;
-	int zeroCol;
+	private int[][] table;
+	private int zeroRow;
+	private int zeroCol;
+
+	//get rid of this in a bit
 	int[] legalz;
-	
-	//Puzzle Board constructor
+
+	//new, ordered Puzzle Board constructor
 	public PuzzleBoard() {
 		this.table = new int[3][3];
 		this.legalz = new int[4];
@@ -23,97 +31,103 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		table[zeroRow][zeroCol] = 0;
 
 	}
-//edit to fill in from scratch
-	public PuzzleBoard(PuzzleBoard x) {
-		this.table = x.table;
-		this.legalz = x.legalz;
-		this.zeroRow = x.zeroRow;
-		this.zeroCol = x.zeroCol;
-	}
-	
-//create a error puzzle
-	public PuzzleBoard(int zero) {
+
+	//new PuzzleBoard based on a template of a board
+	public PuzzleBoard(PuzzleBoard template) {
 		this.table = new int[3][3];
 		this.legalz = new int[4];
 		this.zeroRow = 2;
 		this.zeroCol = 2;
-	}
-	
-	
-	// Prints out the table
-	public static void printTable(PuzzleBoard x) {
-		for(int i=0; i<3; i++) {
-			for(int j=0; j<3; j++) {
 
-				System.out.print(x.table[i][j] + " ");
-			}
-			System.out.println();
-		}
-	}
-
-	public static void moveUp(PuzzleBoard x) {
-		x.table[x.zeroRow][x.zeroCol]= x.table[x.zeroRow - 1][x.zeroCol];
-		x.table[x.zeroRow - 1][x.zeroCol] = 0;
-		x.zeroRow--;
-	}
-
-	public static void moveRight(PuzzleBoard x) {
-		x.table[x.zeroRow][x.zeroCol]= x.table[x.zeroRow][x.zeroCol + 1];
-		x.table[x.zeroRow][x.zeroCol + 1] = 0;
-		x.zeroCol++;
-	}
-
-	public static void moveDown(PuzzleBoard x) {
-		x.table[x.zeroRow][x.zeroCol]= x.table[x.zeroRow + 1][x.zeroCol];
-		x.table[x.zeroRow + 1][x.zeroCol] = 0;
-		x.zeroRow++;
-	}
-
-	public static void moveLeft(PuzzleBoard x) {
-		x.table[x.zeroRow][x.zeroCol ]= x.table[x.zeroRow][x.zeroCol - 1];
-		x.table[x.zeroRow][x.zeroCol - 1] = 0;
-		x.zeroCol--;
-	}
-
-//redo to avoid static
-	public static void isLegal(PuzzleBoard x) {
-
-		//zero out all the legalz array
-		for(int i=0; i<4; i++) {
-			x.legalz[i] = 0;
-		}
-
-		//check for all legal moves and update the array
-		if(x.zeroRow >= 1) {
-			//LeagalMoves == up;
-			x.legalz[0] = 1;
-		}
-		if(x.zeroCol <= 1) {
-			//LeagalMoves == right;
-			x.legalz[1] = 1;
-		}	
-		if(x.zeroRow <= 1) {
-			//LeagalMoves == down;
-			x.legalz[2] = 1;
-		}
-		if(x.zeroCol >= 1) {
-			//LeagalMoves == left;
-			x.legalz[3] = 1;
-		}
-
-	}
-
-
-
-	public static boolean isGoal(PuzzleBoard x) {
 		int counter = 1;
 		for(int i=0; i<3; i++) {
 			for(int j=0; j<3; j++) {
-				if(x.table[i][j] == counter) {
+				this.table[i][j] = template.table[i][j];
+				counter++;
+			}
+		}
+
+	} 
+
+	// Prints out the table
+	public void printTable() {
+		for(int i=0; i<3; i++) {
+			for(int j=0; j<3; j++) {
+
+				System.out.print(this.table[i][j] + " ");
+			}
+			System.out.println();
+		}
+		System.out.println();
+	}
+
+	//Upon request, changes the board with an UP move
+	public void moveUp() {
+		this.table[this.zeroRow][this.zeroCol]= this.table[this.zeroRow - 1][this.zeroCol];
+		this.table[this.zeroRow - 1][this.zeroCol] = 0;
+		this.zeroRow--;
+	}
+
+	//Upon request, changes the board with an RIGHT move
+	public void moveRight() {
+		this.table[this.zeroRow][this.zeroCol]= this.table[this.zeroRow][this.zeroCol + 1];
+		this.table[this.zeroRow][this.zeroCol + 1] = 0;
+		this.zeroCol++;
+	}
+
+	//Upon request, changes the board with an DOWN move
+	public void moveDown() {
+		this.table[this.zeroRow][this.zeroCol]= this.table[this.zeroRow + 1][this.zeroCol];
+		this.table[this.zeroRow + 1][this.zeroCol] = 0;
+		this.zeroRow++;
+	}
+
+	//Upon request, changes the board with an LEFT move
+	public void moveLeft() {
+		this.table[this.zeroRow][this.zeroCol ]= this.table[this.zeroRow][this.zeroCol - 1];
+		this.table[this.zeroRow][this.zeroCol - 1] = 0;
+		this.zeroCol--;
+	}
+
+
+
+	//redo to avoid static
+	public List<Integer> isLegal() {
+		List<Integer> legalMoves = new ArrayList<Integer>(); 
+
+		//check for all legal moves and update the array
+		if(this.zeroRow >= 1) {
+			//LeagalMoves == up;
+			legalMoves.add(1);
+		}
+		if(this.zeroCol <= 1) {
+			//LeagalMoves == right;
+			legalMoves.add(2);
+		}	
+		if(this.zeroRow <= 1) {
+			//LeagalMoves == down;
+			legalMoves.add(3);
+		}
+		if(this.zeroCol >= 1) {
+			//LeagalMoves == left;
+			legalMoves.add(4);
+		}
+
+		return legalMoves;
+
+	}
+
+
+	//Checks if the board matches the initial 123456780 state
+	public boolean isGoal() {
+		int counter = 1;
+		for(int i=0; i<3; i++) {
+			for(int j=0; j<3; j++) {
+				if(this.table[i][j] == counter) {
 					counter++;
 				}
 				else if(counter == 9) {
-					if(x.table[2][2] == 0) {
+					if(this.table[2][2] == 0) {
 						return true;
 					}
 					else {
@@ -133,88 +147,76 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 	//code from the slides. 
 	//priority queue
 	//f(n) = h(n)..heuristic..... + g(n)....path cost...
+	//return a one-time list vs. an atribute then pick based on the length of the list
 
-	private static void randomize(PuzzleBoard x) {
-		isLegal(x); //return a one-time list vs. an atribute then pick based on the length of the list
-		int check = 0;
+	private void randomize() {
+		List<Integer> legalMoves = this.isLegal(); 
 		int randomMove;
-		int temp = 0;
 
-		//check how many legal moves are available
-		for(int i = 0; i<4; i++) {
-			check += x.legalz[i];
-		}
-//		System.out.println("Check is " + check);
-
-
+		//create a random value to choose a random move direction
 		Random rand = new Random();
-		randomMove = rand.nextInt((check - 1) + 1) + 1;
-//		System.out.println("Random is " + randomMove);
+		//		System.out.println("Size of the set " + legalMoves.size());
 
+		randomMove = rand.nextInt(legalMoves.size());
+		//		System.out.println("Random index is " + randomMove);
 
-		for(int i = 0; i<4; i++) {
-			if(x.legalz[i] == 1) {
-				temp++;
-			}
-			if(temp == randomMove) {
-				if(i == 0) {
-					moveUp(x);
-//					printTable(x);
+		//		System.out.println("Random direction is " + legalMoves.get(randomMove));
 
-				}
-				else if(i == 1) {
-					moveRight(x);
-//					printTable(x);
-
-				}
-				else if(i == 2) {
-					moveDown(x);
-//					printTable(x);
-
-				}
-				else {
-					moveLeft(x);
-//					printTable(x);
-				}
-				break;
-			}
+		if(legalMoves.get(randomMove) == 1) {
+			this.moveUp();
+			//			this.printTable();		
+		}
+		else if(legalMoves.get(randomMove) == 2) {
+			this.moveRight();
+			//			this.printTable();
+		}
+		else if(legalMoves.get(randomMove) == 3) {
+			this.moveDown();
+			//			this.printTable();
+		}
+		else if(legalMoves.get(randomMove) == 4) {
+			this.moveLeft();
+			//			this.printTable();
 		}
 
 	}
 
-	public static void randomizeBoard(PuzzleBoard x, int iterations) {
+
+
+	public void randomizeBoard(int iterations) {
 		for(int i = 0; i < iterations; i++) {
-			randomize(x);
+			this.randomize();
 		}
 	}
 
+
+
+	//Equals method (tiles are the same or not) boolean. 
+
+	//hashCode method
+
+
+
+	public static void main(String[] args) {
+
+		PuzzleBoard a = new PuzzleBoard();
+
+		a.printTable();
+
+		//		System.out.println(a.isGoal());
+
+		a.randomizeBoard(3);
+
+		a.printTable();
+
+
+	}
 
 	@Override
 	public int compareTo(PuzzleBoard o) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	
-	//Equals method (tiles are the same or not) boolean. 
-	
-	//hashCode method
-	
-	
 
-	public static void main(String[] args) {
-
-		PuzzleBoard a = new PuzzleBoard();
-
-		printTable(a);
-
-		System.out.println(isGoal(a));
-
-		randomizeBoard(a, 10);
-		
-		printTable(a);
-
-
-	}
-	
 
 }
