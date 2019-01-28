@@ -1,3 +1,4 @@
+import java.util.Hashtable;
 import java.util.PriorityQueue;
 
 //not using static methods
@@ -137,6 +138,8 @@ public class AStar extends PuzzleBoard {
 	}
 
 
+
+	
 
 	public static void main(String[] args) {
 		
