@@ -223,7 +223,6 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 				}
 			}
 		}
-
 		return h;
 	}
 
@@ -233,7 +232,6 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 
 
 		// Calculate element's goal row & col
-
 		int temp = element-1;
 		if(row == temp/3 && col == temp%3) {
 			return 0;
