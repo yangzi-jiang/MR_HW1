@@ -20,11 +20,10 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		this.table = new int[3][3];
 		this.zeroRow = 2;
 		this.zeroCol = 2;
-
-		pathCost = 0;
+		this.pathCost = 0;
 
 		//can we call the heuristic like this? 
-		this.functionCost = pathCost + this.heuristicManhattan();
+		this.functionCost = this.pathCost + this.heuristicManhattan();
 
 		int counter = 1;
 		for(int i=0; i<3; i++) {
@@ -53,19 +52,19 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 
 	} 
 
-	//	// Convert PuzzleBoard to String to be stored in hash table
-	//	public String hashCode() {
-	//		StringBuffer s = new StringBuffer();
-	//		
-	//		for (int i = 0; i < 3; i++) {
-	//			for (int j = 0; j < 3; j++) {
-	//				s.append(this.table[i][j] + " ");
-	//			}
-	//			s.append("\n");
-	//		}
-	//		
-	//		return s.toString();
-	//	}
+	//instead of hashcode, convert PuzzleBoard to String to be stored in hash table
+		public String boardToString() {
+			StringBuffer s = new StringBuffer();
+			
+			for (int i = 0; i < 3; i++) {
+				for (int j = 0; j < 3; j++) {
+					s.append(this.table[i][j] + " ");
+				}
+				s.append("\n");
+			}
+			
+			return s.toString();
+		}
 
 	// Prints out the table
 	public void printTable() {
@@ -106,9 +105,18 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		this.table[this.zeroRow][this.zeroCol - 1] = 0;
 		this.zeroCol--;
 	}
+	
+	// YJ: do we need to update
+	public int updatePathCost(int travelled) {
+		this.pathCost = travelled;
+		return this.pathCost;
+	}
+	
+	public int updateFunctionCost(int heuristicVal) {
+		return this.functionCost = this.pathCost + heuristicVal;
+	}
 
-
-
+	
 	//redo to avoid static
 	public List<Integer> isLegal() {
 		List<Integer> legalMoves = new ArrayList<Integer>(); 
@@ -132,9 +140,7 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		}
 
 		return legalMoves;
-
 	}
-
 
 	//Checks if the board matches the initial 123456780 state
 	public boolean isGoal() {
@@ -164,7 +170,6 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 	//priority queue
 	//f(n) = h(n)..heuristic..... + g(n)....path cost...
 	//return a one-time list vs. an atribute then pick based on the length of the list
-
 	private void randomize() {
 		List<Integer> legalMoves = this.isLegal(); 
 		int randomMove;
@@ -175,7 +180,6 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 
 		randomMove = rand.nextInt(legalMoves.size());
 		//		System.out.println("Random index is " + randomMove);
-
 		//		System.out.println("Random direction is " + legalMoves.get(randomMove));
 
 		if(legalMoves.get(randomMove) == 1) {
@@ -196,7 +200,6 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		}
 
 	}
-
 
 	public void randomizeBoard(int iterations) {
 		for(int i = 0; i < iterations; i++) {
@@ -221,7 +224,6 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		//			System.out.println("mDistance is " + mDistance);
 		return mDistance;
 	}
-
 
 	//Heuristic to calculate the Manhattan distance 
 	public  int heuristicManhattan() {
@@ -268,13 +270,8 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 	}
 
 
-
-
-
 	//Equals method (tiles are the same or not) boolean. 
-
 	//hashCode method
-
 	@Override
 	public int compareTo(PuzzleBoard current) {
 		if (this.functionCost < current.functionCost) {
@@ -287,7 +284,8 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 
 		return -1;
 	}
-
+	
+	// YJ: what do we need this for?
 	//@Override
 	public boolean equalTo(PuzzleBoard next) {
 
@@ -303,7 +301,7 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		return true;
 	}
 
-	// don't need this anymore
+	// YJ: don't need this anymore since we have boardToString
 	//	@Override
 	//	public int HashCode() {
 	//		
@@ -333,6 +331,8 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		a.randomizeBoard(3);
 
 		a.printTable();
+		
+		System.out.println("board to string is: \n" + a.boardToString());
 
 
 	}
