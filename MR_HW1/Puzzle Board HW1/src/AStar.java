@@ -1,7 +1,8 @@
 import java.util.*;
+import java.util.HashSet;
 
 //not using static methods
-public class AStar 	{
+public class AStar{
 	
 // thoughts on using constructor instead????
 //	private int nodesCounter;
@@ -61,7 +62,6 @@ public class AStar 	{
 	}
 
 
-
 	//	GRAPH-SEARCH(problem):
 	//		initialize frontier using the initial state of problem
 	//		loop:
@@ -73,7 +73,6 @@ public class AStar 	{
 	public static int solve(PuzzleBoard start) throws Exception {
 		
 		int nodesCounter = 0;
-
 		Set<String> visited = new HashSet<String>();
 		PriorityQueue<PuzzleBoard> frontier = new PriorityQueue<PuzzleBoard>();
 
@@ -95,15 +94,16 @@ public class AStar 	{
 			if(next.isGoal()) {
 				
 				System.out.println(nodesCounter);
-				return start.pathCost; //returns counter....
+				return nodesCounter; //returns counter....
 				
 				// YJ: we need to return a counter for how many nodes we created, and the # steps to solution
 			}
-
+			
 			queueInsert(next, frontier, visited, nodesCounter);
 			
 			// YJ: need to re-check recently added nodes against the visited ones,
-				// if a recent node's pathCost is less than that one in visited node, we need to update it?
+				// is our A* heuristics consistent？
+				// if a recent node's pathCost is better than that one in visited node, we need to update it?
 				// update visited
 				// calculate new pathcost
 		}
@@ -127,6 +127,8 @@ public class AStar 	{
 		a.randomizeBoard(2);
 
 		a.printTable();
+		
+		
 		System.out.println(" ");
 
 		System.out.println("heuristic1 is " + a.heuristicManhattan());
@@ -134,6 +136,7 @@ public class AStar 	{
 		System.out.println(" ");
 
 		System.out.println(solve(a));
+		
 	}
 
 }

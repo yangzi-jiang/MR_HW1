@@ -11,8 +11,9 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 	private int zeroRow;
 	private int zeroCol;
 
-	int pathCost;
-	int functionCost;
+	private int pathCost;
+	private int functionCost;
+	private int heuristicCost;
 
 
 	//new, ordered Puzzle Board constructor
@@ -21,9 +22,10 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		this.zeroRow = 2;
 		this.zeroCol = 2;
 		this.pathCost = 0;
+		this.heuristicCost = this.heuristicManhattan();
 
 		//can we call the heuristic like this? 
-		this.functionCost = this.pathCost + this.heuristicManhattan();
+		this.functionCost = this.pathCost + this.heuristicCost;
 
 		int counter = 1;
 		for(int i=0; i<3; i++) {
@@ -43,6 +45,8 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 
 		this.pathCost = template.pathCost;
 		this.functionCost = template.functionCost;
+		this.heuristicCost = template.heuristicCost;
+		
 
 		for(int i=0; i<3; i++) {
 			for(int j=0; j<3; j++) {
@@ -76,6 +80,8 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 			System.out.println();
 		}
 		System.out.println();
+		
+		System.out.println("The path cost is " + this.pathCost + "\n");
 	}
 
 	//Upon request, changes the board with an UP move
@@ -83,6 +89,8 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		this.table[this.zeroRow][this.zeroCol]= this.table[this.zeroRow - 1][this.zeroCol];
 		this.table[this.zeroRow - 1][this.zeroCol] = 0;
 		this.zeroRow--;
+		this.pathCost++;
+		this.heuristicCost = this.heuristicManhattan();
 	}
 
 	//Upon request, changes the board with an RIGHT move
@@ -90,6 +98,8 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		this.table[this.zeroRow][this.zeroCol]= this.table[this.zeroRow][this.zeroCol + 1];
 		this.table[this.zeroRow][this.zeroCol + 1] = 0;
 		this.zeroCol++;
+		this.pathCost++;
+		this.heuristicCost = this.heuristicManhattan();
 	}
 
 	//Upon request, changes the board with an DOWN move
@@ -97,6 +107,8 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		this.table[this.zeroRow][this.zeroCol]= this.table[this.zeroRow + 1][this.zeroCol];
 		this.table[this.zeroRow + 1][this.zeroCol] = 0;
 		this.zeroRow++;
+		this.pathCost++;
+		this.heuristicCost = this.heuristicManhattan();
 	}
 
 	//Upon request, changes the board with an LEFT move
@@ -104,19 +116,20 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		this.table[this.zeroRow][this.zeroCol ]= this.table[this.zeroRow][this.zeroCol - 1];
 		this.table[this.zeroRow][this.zeroCol - 1] = 0;
 		this.zeroCol--;
+		this.pathCost++;
+		this.heuristicCost = this.heuristicManhattan();
 	}
 	
 	// YJ: do we need to update
-	public int updatePathCost(int travelled) {
-		this.pathCost = travelled;
-		return this.pathCost;
-	}
-	
-	public int updateFunctionCost(int heuristicVal) {
-		return this.functionCost = this.pathCost + heuristicVal;
-	}
+//	public int updatePathCost(int travelled) {
+//		this.pathCost = travelled;
+//		return this.pathCost;
+//	}
+//	
+//	public int updateFunctionCost(int heuristicVal) {
+//		return this.functionCost = this.pathCost + heuristicVal;
+//	}
 
-	
 	//redo to avoid static
 	public List<Integer> isLegal() {
 		List<Integer> legalMoves = new ArrayList<Integer>(); 
@@ -274,7 +287,7 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 	//hashCode method
 	@Override
 	public int compareTo(PuzzleBoard current) {
-		if (this.functionCost < current.functionCost) {
+		if (this.functionCost > current.functionCost) {
 			return 1;
 		}
 
@@ -284,15 +297,16 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 
 		return -1;
 	}
-	
-	// YJ: what do we need this for?
-	//@Override
-	public boolean equalTo(PuzzleBoard next) {
 
-		//PuzzleBoard nextNode = (PuzzleBoard) next;
+	@Override
+	public boolean equals(Object next) {
+
+		// Is this the right approach?
+		PuzzleBoard nextNode = (PuzzleBoard) next;
+		
 		for(int i=0; i<3; i++) {
 			for(int j=0; j<3; j++) {
-				if(this.table[i][j] != next.table[i][j]) {
+				if(this.table[i][j] != nextNode.table[i][j]) {
 					return false;
 				}
 			}
@@ -300,25 +314,7 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 
 		return true;
 	}
-
-	// YJ: don't need this anymore since we have boardToString
-	//	@Override
-	//	public int HashCode() {
-	//		
-	//		final int prime = 31;
-	//		
-	//		int boardValue = 0;
-	//		
-	//		for(int i=0; i<3; i++) {
-	//			for(int j=0; j<3; j++) {
-	//				boardValue += current.table[i][j] * i + j;
-	//			}
-	//		}
-	//		
-	//		return boardValue * prime;
-	//	}
-
-
+	
 
 	public static void main(String[] args) {
 
