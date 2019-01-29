@@ -57,7 +57,8 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 	} 
 
 	//instead of hashcode, convert PuzzleBoard to String to be stored in hash table
-		public String boardToString() {
+	@Override
+		public int hashCode() {
 			StringBuffer s = new StringBuffer();
 			
 			for (int i = 0; i < 3; i++) {
@@ -67,7 +68,7 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 				s.append("\n");
 			}
 			
-			return s.toString();
+			return s.toString().hashCode();
 		}
 
 	// Prints out the table
@@ -91,6 +92,7 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		this.zeroRow--;
 		this.pathCost++;
 		this.heuristicCost = this.heuristicManhattan();
+		this.functionCost = this.pathCost + this.heuristicCost;
 	}
 
 	//Upon request, changes the board with an RIGHT move
@@ -100,6 +102,7 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		this.zeroCol++;
 		this.pathCost++;
 		this.heuristicCost = this.heuristicManhattan();
+		this.functionCost = this.pathCost + this.heuristicCost;
 	}
 
 	//Upon request, changes the board with an DOWN move
@@ -109,6 +112,7 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		this.zeroRow++;
 		this.pathCost++;
 		this.heuristicCost = this.heuristicManhattan();
+		this.functionCost = this.pathCost + this.heuristicCost;
 	}
 
 	//Upon request, changes the board with an LEFT move
@@ -118,6 +122,7 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		this.zeroCol--;
 		this.pathCost++;
 		this.heuristicCost = this.heuristicManhattan();
+		this.functionCost = this.pathCost + this.heuristicCost;
 	}
 	
 	// YJ: do we need to update
@@ -301,7 +306,7 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 	@Override
 	public boolean equals(Object next) {
 
-		// Is this the right approach?
+		// if next is not puzzleboard, return false
 		PuzzleBoard nextNode = (PuzzleBoard) next;
 		
 		for(int i=0; i<3; i++) {
@@ -327,8 +332,6 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		a.randomizeBoard(3);
 
 		a.printTable();
-		
-		System.out.println("board to string is: \n" + a.boardToString());
 
 
 	}

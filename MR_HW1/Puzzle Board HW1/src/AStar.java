@@ -24,7 +24,7 @@ public class AStar{
 		if(children.contains(1)){
 			PuzzleBoard upBoard = new PuzzleBoard(state);
 			upBoard.moveUp();
-			if(!visited.contains(upBoard.boardToString())){
+			if(!visited.contains(upBoard)){
 				nodesCounter++;
 				frontier.add(upBoard);
 			}
@@ -34,7 +34,7 @@ public class AStar{
 			PuzzleBoard rightBoard = new PuzzleBoard(state);
 			rightBoard.moveRight();
 			frontier.add(rightBoard);
-			if(!visited.contains(rightBoard.boardToString())){
+			if(!visited.contains(rightBoard)){
 				nodesCounter++;
 				frontier.add(rightBoard);
 			}
@@ -44,7 +44,7 @@ public class AStar{
 			PuzzleBoard downBoard = new PuzzleBoard(state);
 			downBoard.moveDown();
 			frontier.add(downBoard);
-			if(!visited.contains(downBoard.boardToString())){
+			if(!visited.contains(downBoard)){
 				nodesCounter++;
 				frontier.add(downBoard);
 			}
@@ -54,7 +54,7 @@ public class AStar{
 			PuzzleBoard leftBoard = new PuzzleBoard(state);
 			leftBoard.moveLeft();
 			frontier.add(leftBoard);
-			if(!visited.contains(leftBoard.boardToString())){
+			if(!visited.contains(leftBoard)){
 				nodesCounter++;
 				frontier.add(leftBoard);
 			}
@@ -73,7 +73,7 @@ public class AStar{
 	public static int solve(PuzzleBoard start) throws Exception {
 		
 		int nodesCounter = 0;
-		Set<String> visited = new HashSet<String>();
+		Set<PuzzleBoard> visited = new HashSet<PuzzleBoard>();
 		PriorityQueue<PuzzleBoard> frontier = new PriorityQueue<PuzzleBoard>();
 
 		frontier.add(start);
@@ -87,19 +87,19 @@ public class AStar{
 //			next.printTable();
 			
 			// visited
-			visited.add(next.boardToString());
+			visited.add(next);
 			
 			next.printTable();
 
 			if(next.isGoal()) {
 				
-				System.out.println(nodesCounter);
+				System.out.println("nodecounter is : " + nodesCounter);
 				return nodesCounter; //returns counter....
 				
 				// YJ: we need to return a counter for how many nodes we created, and the # steps to solution
 			}
 			
-			queueInsert(next, frontier, visited, nodesCounter);
+			queueInsert(next, frontier, visited, nodesCounter); // no need to count nodes when inserting
 			
 			// YJ: need to re-check recently added nodes against the visited ones,
 				// is our A* heuristics consistent？
@@ -124,7 +124,7 @@ public class AStar{
 
 		System.out.println(" ");
 
-		a.randomizeBoard(2);
+		a.randomizeBoard(10);
 
 		a.printTable();
 		
