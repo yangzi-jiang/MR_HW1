@@ -4,36 +4,33 @@ import java.util.*;
 public class AStar 	{
 
 	//needs to be fully redone since no longer using legalzzz
-	private static void queueInsert(PuzzleBoard firstBoard, PriorityQueue frontier) {
-		//		isLegal(x);
-		//		
-		//		if(x.legalz[0] == 1) {
-		//			PuzzleBoard upBoard = new PuzzleBoard(x);
-		//			moveUp(upBoard);
-		//			Node up = new Node(upBoard, heuristic1(upBoard), 1);
-		//			frontier.add(up);
-		//		}
-		//		
-		//		if(x.legalz[1] == 1) {
-		//			PuzzleBoard rightBoard = new PuzzleBoard(x);
-		//			moveRight(rightBoard);
-		//			Node right = new Node(rightBoard, heuristic1(rightBoard), 1);
-		//			frontier.add(right);
-		//		}
-		//		
-		//		if(x.legalz[2] == 1) {
-		//			PuzzleBoard downBoard = new PuzzleBoard(x);
-		//			moveDown(downBoard);
-		//			Node down = new Node(downBoard, heuristic1(downBoard), 1);
-		//			frontier.add(down);
-		//		}
-		//		
-		//		if(x.legalz[3] == 1) {
-		//			PuzzleBoard leftBoard = new PuzzleBoard(x);
-		//			moveLeft(leftBoard);
-		//			Node left = new Node(leftBoard, heuristic1(leftBoard), 1);
-		//			frontier.add(left);
-		//		}
+	private static void queueInsert(PuzzleBoard state, PriorityQueue frontier) {
+		List<Integer> children = state.isLegal();
+
+		if(children.contains(1)){
+			PuzzleBoard upBoard = new PuzzleBoard(state);
+			upBoard.moveUp();
+			frontier.add(upBoard);
+		}
+
+		if(children.contains(2)){
+			PuzzleBoard rightBoard = new PuzzleBoard(state);
+			rightBoard.moveRight();
+			frontier.add(rightBoard);
+		}
+
+		if(children.contains(3)){
+			PuzzleBoard downBoard = new PuzzleBoard(state);
+			downBoard.moveDown();
+			frontier.add(downBoard);
+		}
+
+		if(children.contains(4)){
+			PuzzleBoard leftBoard = new PuzzleBoard(state);
+			leftBoard.moveLeft();
+			frontier.add(leftBoard);
+		}
+
 
 	}
 
@@ -48,27 +45,33 @@ public class AStar 	{
 	//			for each successor s of node:
 	//				add s to frontier
 	public static int solve(PuzzleBoard start) {
-		
+
+		int nodesCounter = 0;
 		Set<String> visited = new HashSet<String>();
-		
-		
 		PriorityQueue<PuzzleBoard> frontier = new PriorityQueue<PuzzleBoard>();
 
 		frontier.add(start);
 
 		while(!frontier.isEmpty()) {
 			PuzzleBoard next = frontier.poll();
+			//after popping a node, we increment the counter
+			nodesCounter++;
+			
+			System.out.println(nodesCounter);
+			
+//			System.out.println("After node is popped ");
+//			next.printTable();
 			
 			// visited
 			visited.add(start.toString());
+			
 
 			next.printTable();
 
-			//counter++ somewhere
 			if(next.isGoal()) {
-				return 0; //returns counter....
+				return nodesCounter; //returns counter....
 			}
-			
+
 			queueInsert(next, frontier);
 		}
 
@@ -89,7 +92,7 @@ public class AStar 	{
 
 		System.out.println(" ");
 
-		a.randomizeBoard(3);
+		a.randomizeBoard(2);
 
 		a.printTable();
 		System.out.println(" ");

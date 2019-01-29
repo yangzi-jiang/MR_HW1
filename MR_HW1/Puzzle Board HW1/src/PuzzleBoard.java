@@ -20,9 +20,9 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		this.table = new int[3][3];
 		this.zeroRow = 2;
 		this.zeroCol = 2;
-		
+
 		pathCost = 0;
-		
+
 		//can we call the heuristic like this? 
 		this.functionCost = pathCost + this.heuristicManhattan();
 
@@ -39,35 +39,33 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 	//new PuzzleBoard based on a template of a board
 	public PuzzleBoard(PuzzleBoard template) {
 		this.table = new int[3][3];
-		this.zeroRow = 2;
-		this.zeroCol = 2;
-		
+		this.zeroRow = template.zeroRow;
+		this.zeroCol = template.zeroCol;
+
 		this.pathCost = template.pathCost;
 		this.functionCost = template.functionCost;
 
-		int counter = 1;
 		for(int i=0; i<3; i++) {
 			for(int j=0; j<3; j++) {
 				this.table[i][j] = template.table[i][j];
-				counter++;
 			}
 		}
 
 	} 
 
-	// Convert PuzzleBoard to String to be stored in hash table
-	public String hashCode() {
-		StringBuffer s = new StringBuffer();
-		
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
-				s.append(this.table[i][j] + " ");
-			}
-			s.append("\n");
-		}
-		
-		return s.toString();
-	}
+	//	// Convert PuzzleBoard to String to be stored in hash table
+	//	public String hashCode() {
+	//		StringBuffer s = new StringBuffer();
+	//		
+	//		for (int i = 0; i < 3; i++) {
+	//			for (int j = 0; j < 3; j++) {
+	//				s.append(this.table[i][j] + " ");
+	//			}
+	//			s.append("\n");
+	//		}
+	//		
+	//		return s.toString();
+	//	}
 
 	// Prints out the table
 	public void printTable() {
@@ -199,10 +197,13 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 
 	}
 
-	
+
 	public void randomizeBoard(int iterations) {
 		for(int i = 0; i < iterations; i++) {
 			this.randomize();
+			System.out.println("Randomizer move "); 
+			System.out.println("");
+			this.printTable();
 		}
 	}
 
@@ -279,17 +280,17 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		if (this.functionCost < current.functionCost) {
 			return 1;
 		}
-		
+
 		if (this.functionCost == current.functionCost) {
 			return 0;
 		}
-		
+
 		return -1;
 	}
 
 	//@Override
 	public boolean equalTo(PuzzleBoard next) {
-		
+
 		//PuzzleBoard nextNode = (PuzzleBoard) next;
 		for(int i=0; i<3; i++) {
 			for(int j=0; j<3; j++) {
@@ -298,26 +299,26 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 				}
 			}
 		}
-		
+
 		return true;
 	}
-	
+
 	// don't need this anymore
-	@Override
-	public int HashCode() {
-		
-		final int prime = 31;
-		
-		int boardValue = 0;
-		
-		for(int i=0; i<3; i++) {
-			for(int j=0; j<3; j++) {
-				boardValue += current.table[i][j] * i + j;
-			}
-		}
-		
-		return boardValue * prime;
-	}
+	//	@Override
+	//	public int HashCode() {
+	//		
+	//		final int prime = 31;
+	//		
+	//		int boardValue = 0;
+	//		
+	//		for(int i=0; i<3; i++) {
+	//			for(int j=0; j<3; j++) {
+	//				boardValue += current.table[i][j] * i + j;
+	//			}
+	//		}
+	//		
+	//		return boardValue * prime;
+	//	}
 
 
 
