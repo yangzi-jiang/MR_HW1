@@ -3,9 +3,8 @@ import java.util.*;
 //not using static methods
 public class AStar 	{
 
-
 	//needs to be fully redone since no longer using legalzzz
-	private static void queueInsert(PuzzleBoard x, PriorityQueue frontier) {
+	private static void queueInsert(PuzzleBoard firstBoard, PriorityQueue frontier) {
 		//		isLegal(x);
 		//		
 		//		if(x.legalz[0] == 1) {
@@ -49,13 +48,19 @@ public class AStar 	{
 	//			for each successor s of node:
 	//				add s to frontier
 	public static int solve(PuzzleBoard start) {
-
+		
+		Set<String> visited = new HashSet<String>();
+		
+		
 		PriorityQueue<PuzzleBoard> frontier = new PriorityQueue<PuzzleBoard>();
 
 		frontier.add(start);
 
 		while(!frontier.isEmpty()) {
 			PuzzleBoard next = frontier.poll();
+			
+			// visited
+			visited.add(start.toString());
 
 			next.printTable();
 
@@ -63,6 +68,7 @@ public class AStar 	{
 			if(next.isGoal()) {
 				return 0; //returns counter....
 			}
+			
 			queueInsert(next, frontier);
 		}
 
