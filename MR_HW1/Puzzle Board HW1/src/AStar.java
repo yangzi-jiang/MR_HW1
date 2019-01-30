@@ -11,15 +11,15 @@ import java.util.HashSet;
 public class AStar{
 	
 	//Memory
-	public static int queueInsert(PuzzleBoard state, PriorityQueue frontier, Set visited, int nodesCounter) {
+	public static int queueInsert(PuzzleBoard state, PriorityQueue frontier, Set visited, int nodesCounter, int heuristicsOption) {
 		List<Integer> children = state.isLegal();
 
 		if(children.contains(1)){
 			PuzzleBoard upBoard = new PuzzleBoard(state);
 			upBoard.moveUp();
 			upBoard.pathCost++;
-			upBoard.heuristicCost = upBoard.heuristicManhattan();
-			//			upBoard.heuristicCost = upBoard.heuristicMisplaced();
+			if(heuristicsOption == 2) { upBoard.heuristicCost = upBoard.heuristicManhattan();}
+			if(heuristicsOption == 1) { upBoard.heuristicCost = upBoard.heuristicMisplaced();}
 			upBoard.functionCost = upBoard.pathCost + upBoard.heuristicCost;
 			if(!visited.contains(upBoard)){
 				frontier.add(upBoard);
@@ -31,8 +31,8 @@ public class AStar{
 			PuzzleBoard rightBoard = new PuzzleBoard(state);
 			rightBoard.moveRight();
 			rightBoard.pathCost++;
-			rightBoard.heuristicCost = rightBoard.heuristicManhattan();
-			//			rightBoard.heuristicCost = upBoard.heuristicMisplaced();
+			if(heuristicsOption == 2) { rightBoard.heuristicCost = rightBoard.heuristicManhattan();}
+			if(heuristicsOption == 1) { rightBoard.heuristicCost = rightBoard.heuristicMisplaced();}
 			rightBoard.functionCost = rightBoard.pathCost + rightBoard.heuristicCost;
 			if(!visited.contains(rightBoard)){
 				frontier.add(rightBoard);
@@ -44,8 +44,8 @@ public class AStar{
 			PuzzleBoard downBoard = new PuzzleBoard(state);
 			downBoard.moveDown();
 			downBoard.pathCost++;
-			downBoard.heuristicCost = downBoard.heuristicManhattan();
-			//			downBoard.heuristicCost = upBoard.heuristicMisplaced();
+			if(heuristicsOption == 2) { downBoard.heuristicCost = downBoard.heuristicManhattan();}
+			if(heuristicsOption == 1) { downBoard.heuristicCost = downBoard.heuristicMisplaced();}
 			downBoard.functionCost = downBoard.pathCost + downBoard.heuristicCost;
 			if(!visited.contains(downBoard)){
 				frontier.add(downBoard);
@@ -57,8 +57,8 @@ public class AStar{
 			PuzzleBoard leftBoard = new PuzzleBoard(state);
 			leftBoard.moveLeft();
 			leftBoard.pathCost++;
-			leftBoard.heuristicCost = leftBoard.heuristicManhattan();
-			//			leftBoard.heuristicCost = upBoard.heuristicMisplaced();
+			if(heuristicsOption == 2) { leftBoard.heuristicCost = leftBoard.heuristicManhattan();}
+			if(heuristicsOption == 1) { leftBoard.heuristicCost = leftBoard.heuristicMisplaced();}
 			leftBoard.functionCost = leftBoard.pathCost + leftBoard.heuristicCost;
 			if(!visited.contains(leftBoard)){
 				frontier.add(leftBoard);
@@ -78,7 +78,7 @@ public class AStar{
 	//			if node contains goal state, return solution
 	//			for each successor s of node:
 	//				add s to frontier
-	public static int[] solve(PuzzleBoard start) throws Exception {
+	public static int[] solve(PuzzleBoard start, int heuristicsOption) throws Exception {
 		int[] nodesAndPathcost = new int[2];
 		int nodesCounter = 0;
 		Set<PuzzleBoard> visited = new HashSet<PuzzleBoard>();
@@ -100,7 +100,7 @@ public class AStar{
 				nodesAndPathcost[1] = next.pathCost;
 				return nodesAndPathcost;
 			}	
-			nodesCounter = queueInsert(next, frontier, visited, nodesCounter); // no need to count nodes when inserting
+			nodesCounter = queueInsert(next, frontier, visited, nodesCounter, heuristicsOption); // no need to count nodes when inserting
 		}
 
 		System.out.println("Error");
@@ -125,28 +125,40 @@ public class AStar{
 		List<Integer> bucket = new ArrayList<Integer>();
 		int[] nodesAndDepth = new int[2];
 		
-		while(bucket.size() < 100) {
-			PuzzleBoard board = new PuzzleBoard();
-			board.randomizeBoard(26);
-			nodesAndDepth = solve(board);
-//			System.out.println("pathcostB is " + nodesAndDepth[1]);
-			
-			if(nodesAndDepth[1] == 12) { // If path == 2
-				bucket.add(nodesAndDepth[0]);
-//				System.out.println("bucket at 3 is " + bucket.get(3));	
+		// Set up 
+		int heuristicsOption = 1;
+		
+		//Generate data
+		for(int depth = 2; depth < 25; depth = depth + 2) {
+			while(bucket.size() < 100 * (depth/2)) {
+				PuzzleBoard board = new PuzzleBoard();
+				board.randomizeBoard(depth * 4);
+				nodesAndDepth = solve(board, heuristicsOption);
+//				System.out.println("pathcostB is " + nodesAndDepth[1]);
+				
+				if(nodesAndDepth[1] == depth) { // If path == 2
+					bucket.add(nodesAndDepth[0]);
+//					System.out.println("bucket at 3 is " + bucket.get(3));	
+				}
 			}
 		}
 		
-		PrintWriter pw = new PrintWriter(new File("/Users/yangzijiang/Desktop/depth12.csv"));
+		PrintWriter pw = new PrintWriter(new File("/Users/yangzijiang/Desktop/h" + heuristicsOption + "depth.csv"));
+//		PrintWriter pw = new PrintWriter(new File("/Users/yangzijiang/Desktop/h" + heuristicsOption + "depth" + depth + ".csv"));
 		StringBuilder sb = new StringBuilder();
-		for(int i=0; i < bucket.size();i++) {
-			sb.append(Integer.toString(bucket.get(i)));
-			sb.append(',');
+		
+		for(int j = 0; j < 12; j++) {
+			for(int i=0; i < 100;i++) {  // bucket.size()
+				sb.append(Integer.toString(bucket.get(i + j * 100)));
+				sb.append(',');
+			}
+			sb.append('\n');
 		}
+
 		pw.write(sb.toString());
         pw.close();
 		
-//		usingDataOutputStream(bucket, "depth24.txt");
+//		usingDataOutputStream(bucket, "depth" + depth + ".txt");
 	}
 
 }
