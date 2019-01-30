@@ -185,9 +185,9 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 	public void randomizeBoard(int iterations) {
 		for(int i = 0; i < iterations; i++) {
 			this.randomize();
-			this.printTable();
+//			this.printTable();
 		}
-		System.out.println("Randomizing Board is Finished"); 
+//		System.out.println("Randomizing Board is Finished"); 
 	}
 
 	//helper for heuristicManhattan
