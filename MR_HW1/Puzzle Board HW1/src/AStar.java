@@ -4,61 +4,64 @@ import java.util.HashSet;
 //not using static methods
 public class AStar{
 	
-// thoughts on using constructor instead????
-//	private int nodesCounter;
-//
-//	public AStar() {
-//		this.nodesCounter = 0;
-//	}
-//	
-//	public int getNodesCounter() {
-//		return this.nodesCounter;
-//	}
-//		
-	
-	//needs to be fully redone since no longer using legalzzz
 	//Memory
-	public static void queueInsert(PuzzleBoard state, PriorityQueue frontier, Set visited, int nodesCounter) {
+	public static int queueInsert(PuzzleBoard state, PriorityQueue frontier, Set visited, int nodesCounter) {
 		List<Integer> children = state.isLegal();
 
 		if(children.contains(1)){
 			PuzzleBoard upBoard = new PuzzleBoard(state);
 			upBoard.moveUp();
+			upBoard.pathCost++;
+			upBoard.heuristicCost = upBoard.heuristicManhattan();
+//			upBoard.heuristicCost = upBoard.heuristicMisplaced();
+			upBoard.functionCost = upBoard.pathCost + upBoard.heuristicCost;
 			if(!visited.contains(upBoard)){
-				nodesCounter++;
 				frontier.add(upBoard);
+				nodesCounter++;
 			}
 		}
 
 		if(children.contains(2)){
 			PuzzleBoard rightBoard = new PuzzleBoard(state);
 			rightBoard.moveRight();
-			frontier.add(rightBoard);
+			rightBoard.pathCost++;
+			rightBoard.heuristicCost = rightBoard.heuristicManhattan();
+//			rightBoard.heuristicCost = upBoard.heuristicMisplaced();
+			rightBoard.functionCost = rightBoard.pathCost + rightBoard.heuristicCost;
 			if(!visited.contains(rightBoard)){
-				nodesCounter++;
 				frontier.add(rightBoard);
+				nodesCounter++;
 			}
 		}
 
 		if(children.contains(3)){
 			PuzzleBoard downBoard = new PuzzleBoard(state);
 			downBoard.moveDown();
-			frontier.add(downBoard);
+			downBoard.pathCost++;
+			downBoard.heuristicCost = downBoard.heuristicManhattan();
+//			downBoard.heuristicCost = upBoard.heuristicMisplaced();
+			downBoard.functionCost = downBoard.pathCost + downBoard.heuristicCost;
 			if(!visited.contains(downBoard)){
-				nodesCounter++;
 				frontier.add(downBoard);
+				nodesCounter++;
 			}
 		}
 
 		if(children.contains(4)){
 			PuzzleBoard leftBoard = new PuzzleBoard(state);
 			leftBoard.moveLeft();
-			frontier.add(leftBoard);
+			leftBoard.pathCost++;
+			leftBoard.heuristicCost = leftBoard.heuristicManhattan();
+//			leftBoard.heuristicCost = upBoard.heuristicMisplaced();
+			leftBoard.functionCost = leftBoard.pathCost + leftBoard.heuristicCost;
 			if(!visited.contains(leftBoard)){
-				nodesCounter++;
 				frontier.add(leftBoard);
+				nodesCounter++;
 			}
 		}
+		System.out.println("nodecounter is : " + nodesCounter);
+		
+		return nodesCounter;
 	}
 
 
@@ -77,66 +80,41 @@ public class AStar{
 		PriorityQueue<PuzzleBoard> frontier = new PriorityQueue<PuzzleBoard>();
 
 		frontier.add(start);
+		nodesCounter++;
 		
 		while(!frontier.isEmpty()) {
 			PuzzleBoard next = frontier.poll();
-			//after popping a node, we increment the counter
-			nodesCounter++;
-			
 //			System.out.println("After node is popped ");
-//			next.printTable();
-			
-			// visited
 			visited.add(next);
-			
 			next.printTable();
-
+			
+			System.out.println("The path cost is " + next.pathCost);
+			System.out.println("The heuristic cost is " + next.heuristicCost);
+			System.out.println("The function cost is " + next.functionCost);
+			
 			if(next.isGoal()) {
-				
-				System.out.println("nodecounter is : " + nodesCounter);
-				return nodesCounter; //returns counter....
-				
-				// YJ: we need to return a counter for how many nodes we created, and the # steps to solution
-			}
-			
-			queueInsert(next, frontier, visited, nodesCounter); // no need to count nodes when inserting
-			
-			// YJ: need to re-check recently added nodes against the visited ones,
-				// is our A* heuristics consistent？
-				// if a recent node's pathCost is better than that one in visited node, we need to update it?
-				// update visited
-				// calculate new pathcost
+				next.printTable();
+				System.out.println("The path cost is " + next.pathCost);
+				System.out.println("The heuristic cost is " + next.heuristicCost);
+				System.out.println("The function cost is " + next.functionCost);
+				return nodesCounter;
+			}	
+			nodesCounter = queueInsert(next, frontier, visited, nodesCounter); // no need to count nodes when inserting
 		}
 
 		System.out.println("Error");
-		throw new Exception();
-		// is this how you throw?
+		throw new Exception(); // is this how you throw?
 	}
 
 
 	public static void main(String[] args) throws Exception {
 
-		// Create boards and solve them using A*
+		PuzzleBoard board = new PuzzleBoard();
+		board.printTable();
 
-		PuzzleBoard a = new PuzzleBoard();
+		board.randomizeBoard(50);
 
-		a.printTable();
-
-		System.out.println(" ");
-
-		a.randomizeBoard(10);
-
-		a.printTable();
-		
-		
-		System.out.println(" ");
-
-		System.out.println("heuristic1 is " + a.heuristicManhattan());
-
-		System.out.println(" ");
-
-		System.out.println(solve(a));
-		
+		System.out.println("nodecounter is : " + solve(board));	
 	}
 
 }

@@ -11,9 +11,9 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 	private int zeroRow;
 	private int zeroCol;
 
-	private int pathCost;
-	private int functionCost;
-	private int heuristicCost;
+	int pathCost;
+	int functionCost;
+	int heuristicCost;
 
 
 	//new, ordered Puzzle Board constructor
@@ -23,8 +23,7 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		this.zeroCol = 2;
 		this.pathCost = 0;
 		this.heuristicCost = this.heuristicManhattan();
-
-		//can we call the heuristic like this? 
+//		this.heuristicCost = this.heuristicMisplaced();
 		this.functionCost = this.pathCost + this.heuristicCost;
 
 		int counter = 1;
@@ -56,7 +55,7 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 
 	} 
 
-	//instead of hashcode, convert PuzzleBoard to String to be stored in hash table
+	//Convert PuzzleBoard to String to be stored in hash table
 	@Override
 		public int hashCode() {
 			StringBuffer s = new StringBuffer();
@@ -81,8 +80,6 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 			System.out.println();
 		}
 		System.out.println();
-		
-		System.out.println("The path cost is " + this.pathCost + "\n");
 	}
 
 	//Upon request, changes the board with an UP move
@@ -90,9 +87,6 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		this.table[this.zeroRow][this.zeroCol]= this.table[this.zeroRow - 1][this.zeroCol];
 		this.table[this.zeroRow - 1][this.zeroCol] = 0;
 		this.zeroRow--;
-		this.pathCost++;
-		this.heuristicCost = this.heuristicManhattan();
-		this.functionCost = this.pathCost + this.heuristicCost;
 	}
 
 	//Upon request, changes the board with an RIGHT move
@@ -100,9 +94,6 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		this.table[this.zeroRow][this.zeroCol]= this.table[this.zeroRow][this.zeroCol + 1];
 		this.table[this.zeroRow][this.zeroCol + 1] = 0;
 		this.zeroCol++;
-		this.pathCost++;
-		this.heuristicCost = this.heuristicManhattan();
-		this.functionCost = this.pathCost + this.heuristicCost;
 	}
 
 	//Upon request, changes the board with an DOWN move
@@ -110,9 +101,6 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		this.table[this.zeroRow][this.zeroCol]= this.table[this.zeroRow + 1][this.zeroCol];
 		this.table[this.zeroRow + 1][this.zeroCol] = 0;
 		this.zeroRow++;
-		this.pathCost++;
-		this.heuristicCost = this.heuristicManhattan();
-		this.functionCost = this.pathCost + this.heuristicCost;
 	}
 
 	//Upon request, changes the board with an LEFT move
@@ -120,22 +108,9 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		this.table[this.zeroRow][this.zeroCol ]= this.table[this.zeroRow][this.zeroCol - 1];
 		this.table[this.zeroRow][this.zeroCol - 1] = 0;
 		this.zeroCol--;
-		this.pathCost++;
-		this.heuristicCost = this.heuristicManhattan();
-		this.functionCost = this.pathCost + this.heuristicCost;
 	}
-	
-	// YJ: do we need to update
-//	public int updatePathCost(int travelled) {
-//		this.pathCost = travelled;
-//		return this.pathCost;
-//	}
-//	
-//	public int updateFunctionCost(int heuristicVal) {
-//		return this.functionCost = this.pathCost + heuristicVal;
-//	}
 
-	//redo to avoid static
+	//List of legal moves
 	public List<Integer> isLegal() {
 		List<Integer> legalMoves = new ArrayList<Integer>(); 
 
@@ -184,37 +159,25 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 		return true;
 	}
 
-	//code from the slides. 
-	//priority queue
-	//f(n) = h(n)..heuristic..... + g(n)....path cost...
-	//return a one-time list vs. an atribute then pick based on the length of the list
+	//return a one-time list then pick based on the length of the list
 	private void randomize() {
 		List<Integer> legalMoves = this.isLegal(); 
 		int randomMove;
 
-		//create a random value to choose a random move direction
 		Random rand = new Random();
-		//		System.out.println("Size of the set " + legalMoves.size());
-
 		randomMove = rand.nextInt(legalMoves.size());
-		//		System.out.println("Random index is " + randomMove);
-		//		System.out.println("Random direction is " + legalMoves.get(randomMove));
 
 		if(legalMoves.get(randomMove) == 1) {
-			this.moveUp();
-			//			this.printTable();		
+			this.moveUp();	
 		}
 		else if(legalMoves.get(randomMove) == 2) {
 			this.moveRight();
-			//			this.printTable();
 		}
 		else if(legalMoves.get(randomMove) == 3) {
 			this.moveDown();
-			//			this.printTable();
 		}
 		else if(legalMoves.get(randomMove) == 4) {
 			this.moveLeft();
-			//			this.printTable();
 		}
 
 	}
@@ -222,10 +185,9 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 	public void randomizeBoard(int iterations) {
 		for(int i = 0; i < iterations; i++) {
 			this.randomize();
-			System.out.println("Randomizer move "); 
-			System.out.println("");
 			this.printTable();
 		}
+		System.out.println("Randomizing Board is Finished"); 
 	}
 
 	//helper for heuristicManhattan
@@ -239,7 +201,6 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 
 		int mDistance = Math.abs(goalRow - row) + Math.abs(goalCol - col);	
 
-		//			System.out.println("mDistance is " + mDistance);
 		return mDistance;
 	}
 
@@ -283,57 +244,41 @@ public class PuzzleBoard implements Comparable<PuzzleBoard> {
 				}
 			}
 		}
-		//			System.out.println("Heuristic 2 is " + h);
 		return h;
 	}
 
-
-	//Equals method (tiles are the same or not) boolean. 
-	//hashCode method
+	//CompareTo method for Priority Queue
 	@Override
-	public int compareTo(PuzzleBoard current) {
-		if (this.functionCost > current.functionCost) {
+	public int compareTo(PuzzleBoard next) {
+		if (this.functionCost > next.functionCost) {
 			return 1;
 		}
 
-		if (this.functionCost == current.functionCost) {
+		if (this.functionCost == next.functionCost) {
 			return 0;
 		}
 
 		return -1;
 	}
 
+	//Equals method for Priority Queue
 	@Override
 	public boolean equals(Object next) {
-
-		// if next is not puzzleboard, return false
-		PuzzleBoard nextNode = (PuzzleBoard) next;
 		
-		for(int i=0; i<3; i++) {
-			for(int j=0; j<3; j++) {
-				if(this.table[i][j] != nextNode.table[i][j]) {
-					return false;
+		if (next instanceof PuzzleBoard) { // if next is not puzzle board type, return false
+			PuzzleBoard nextBoard = (PuzzleBoard) next;
+			
+			for(int i=0; i<3; i++) {
+				for(int j=0; j<3; j++) {
+					if(this.table[i][j] != nextBoard.table[i][j]) {
+						return false;
+					}
 				}
 			}
+			
+			return true;
 		}
-
-		return true;
-	}
-	
-
-	public static void main(String[] args) {
-
-		PuzzleBoard a = new PuzzleBoard();
-
-		a.printTable();
-
-		//		System.out.println(a.isGoal());
-
-		a.randomizeBoard(3);
-
-		a.printTable();
-
-
+		return false;
 	}
 
 }
